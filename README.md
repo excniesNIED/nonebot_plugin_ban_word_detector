@@ -8,7 +8,8 @@
 
 一款为 NoneBot2 设计的群聊违禁词检测插件，能够根据用户违规次数实现递进式惩罚（警告撤回 -> 禁言 -> 踢出），并记录详细的操作日志。
 
-效果图
+## 效果图
+
 <img src="https://gastigado.cnies.org/d/project_nonebot_plugin_group_welcome/PixPin_2025_09_01_18_15_05.png?sign=85TMwzimoUlY7A10RaTTQUYIf4uky-SJmFypuO-_oS8=:0" alt="效果图预览" style="zoom:50%;" />
 
 ## ✨ 功能
