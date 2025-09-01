@@ -8,6 +8,9 @@
 
 一款为 NoneBot2 设计的群聊违禁词检测插件，能够根据用户违规次数实现递进式惩罚（警告撤回 -> 禁言 -> 踢出），并记录详细的操作日志。
 
+效果图
+<img src="https://gastigado.cnies.org/d/project_nonebot_plugin_group_welcome/PixPin_2025_09_01_18_15_05.png?sign=85TMwzimoUlY7A10RaTTQUYIf4uky-SJmFypuO-_oS8=:0" alt="效果图预览" style="zoom:50%;" />
+
 ## ✨ 功能
 
 - **多词库支持**: 可通过配置文件同时加载多个本地词库文件。
@@ -15,6 +18,7 @@
   - **第一次**检测到违规消息：撤回该消息并发送警告。
   - **第二次**检测到同一用户的违规消息：撤回消息并禁言该用户30分钟。
   - **第三次**检测到同一用户的违规消息：将该用户踢出群聊。
+  - 踢出群聊后，检测次数重置。
 - **持久化记录**: 用户违规次数会被记录在本地，即使机器人重启也不会丢失。
 - **管理员豁免**: 自动忽略群主和管理员的消息，防止误判。
 - **详细日志**: 所有检测和处理操作都会以Unix日志风格记录到本地文件 `noadpls.txt` 中，方便追溯。
@@ -56,9 +60,19 @@
 
 插件会自动创建 `user_violations.json` 文件来存储用户的违规计数，您通常无需手动修改它。
 
-## 使用方法
+## 安装
 
 将 `textban.py` 放置在 NoneBot 项目的 `src/plugins` 目录下。修改第23行的图片显示和第34行的欢迎语即可。
+
+违禁词库可以使用本人根据 [cleanse-speech](https://github.com/TelechaBot/cleanse-speech) 转换的词库 [清谈词库](https://github.com/excniesNIED/nao-chatbot/tree/main/nonebot-plugin-kawaii-robot/outer)：
+
+- `advertisement`：默认中文广告词库
+- `pornographic`：默认中文色情词库
+- `politics`: 默认中文敏感词库
+- `general`: 默认中文通用词库
+- `netease`: 网易屏蔽词库
+
+针对校园新生群、班级群等校园场景，可以使用本人整理的基于校园迎新群真实广告样本整理的广告检测词库 [campus-ad-detection-words](https://github.com/excniesNIED/campus-ad-detection-words)。
 
 ## 📖 使用
 
