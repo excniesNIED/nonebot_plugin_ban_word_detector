@@ -94,6 +94,18 @@
 [2025-09-01 10:20:05] [987654321] [李四] [这是违规内容] [撤回消息]
 ```
 
+## 💡 鸣谢
+
+本插件站在了巨人的肩膀上，开发过程中吸收和借鉴了许多优秀项目的思想，感谢以下项目及其开发者：
+
+- [nonebot-plugin-text-ban](https://github.com/zhongwen-4/nonebot-plugin-text-ban) 参考了功能实现
+- [TelechaBot/cleanse-speech](https://github.com/TelechaBot/cleanse-speech) 参考了基础屏蔽机制和预定义词库
+- [nonebot_plugin_admin](https://github.com/yzyyz1387/nonebot_plugin_admin)
+- [nonebot-plugin-noadpls](https://github.com/LuoChu-NB2Dev/nonebot-plugin-noadpls)
+- [zhenxun_bot](https://github.com/zhenxun-org/zhenxun_bot)
+
+如果本插件无法满足您的全部需求，也推荐您了解和尝试上述优秀项目。
+
 ## 📄 开源许可
 
 本插件使用 [MIT License](https://github.com/Melody-core/nonebot-plugin-word-detector/blob/main/LICENSE) 开源。
