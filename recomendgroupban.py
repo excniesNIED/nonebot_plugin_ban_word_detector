@@ -36,6 +36,7 @@ def load_config():
 def load_user_violations():
     """从文件加载用户违规记录"""
     global user_violations
+    user_violations.clear()
     if os.path.exists(USER_VIOLATIONS_PATH):
         try:
             with open(USER_VIOLATIONS_PATH, 'r', encoding='utf-8') as f:
@@ -46,7 +47,7 @@ def load_user_violations():
                 logger.info("成功加载用户违规记录。")
         except (json.JSONDecodeError, TypeError):
             logger.error("用户违规记录文件损坏，将创建新的记录。")
-            user_violations = defaultdict(lambda: defaultdict(int))
+            user_violations.clear()
 
 def save_user_violations():
     """保存用户违规记录到文件"""
@@ -61,10 +62,10 @@ async def _():
 
 # --- 核心功能 ---
 
-def log_action(group_id: int, user_name: str, message: str, result: str):
+def log_action(group_id: int, group_name: str, user_id: int, user_name: str, message: str, result: str):
     """记录操作到日志文件"""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    log_entry = f"[{timestamp}] [{group_id}] [{user_name}] [{message}] [{result}]\n"
+    log_entry = f"[{timestamp}] [群聊: {group_name}({group_id})] [用户: {user_name}({user_id})] [{message}] [{result}]\n"
     try:
         with open(LOG_FILE_PATH, 'a', encoding='utf-8') as f:
             f.write(log_entry)
@@ -78,6 +79,12 @@ async def handle_violation(bot: Bot, event: GroupMessageEvent, reason: str):
     user_name = event.sender.card or event.sender.nickname
     message_content = "推荐群聊卡片"
 
+    try:
+        group_info = await bot.get_group_info(group_id=group_id)
+        group_name = group_info.get("group_name", str(group_id))
+    except Exception:
+        group_name = str(group_id)
+
     # 排除管理员和群主
     try:
         user_info = await bot.get_group_member_info(group_id=group_id, user_id=user_id)
@@ -88,6 +95,9 @@ async def handle_violation(bot: Bot, event: GroupMessageEvent, reason: str):
         logger.error(f"获取群成员信息失败: {e}, 可能是机器人权限不足或用户已退群。")
         # 如果无法获取信息，默认继续执行处理
         pass
+
+    # 每次处理前重新加载数据，确保计数的统一性
+    load_user_violations()
 
     # 增加用户违规次数
     user_violations[group_id][user_id] += 1
@@ -130,11 +140,11 @@ async def handle_violation(bot: Bot, event: GroupMessageEvent, reason: str):
             f"本次予以{action_description}，如果继续发送将被禁言或踢出群聊！"
         )
         await bot.send_group_msg(group_id=group_id, message=warning_msg)
-        log_action(group_id, user_name, message_content, action_result)
-        logger.info(f"处理违规: 群({group_id}) 用户({user_name}) 内容({message_content}) 结果({action_result})")
+        log_action(group_id, group_name, user_id, user_name, message_content, action_result)
+        logger.info(f"处理违规: 群({group_name}({group_id})) 用户({user_name}({user_id})) 内容({message_content}) 结果({action_result})")
 
     except Exception as e:
-        log_action(group_id, user_name, message_content, f"处理失败: {e}")
+        log_action(group_id, group_name, user_id, user_name, message_content, f"处理失败: {e}")
         logger.error(f"处理违规时发生错误: {e}")
 
 
